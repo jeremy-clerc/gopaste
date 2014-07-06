@@ -1,4 +1,3 @@
-// http://golang.org/doc/articles/wiki/
 package main
 
 import (
@@ -15,15 +14,15 @@ import (
 )
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz"
-const urlLength = 6
+const idLength = 6
 const dataDir = "data"
 
 var validPath = regexp.MustCompile(
-	fmt.Sprintf("^/([a-zA-Z0-9]{%d})$", urlLength))
+	fmt.Sprintf("^/([a-zA-Z0-9]{%d})$", idLength))
 var filenameReg = regexp.MustCompile(
 	fmt.Sprintf("^%s/([a-zA-Z0-9]{%d})-([a-z0-9]+)$",
 		dataDir,
-		urlLength))
+		idLength))
 
 var languages = map[string]map[string]string{
 	"text": {
@@ -117,9 +116,9 @@ func loadPaste(name string) (*Paste, error) {
 		Content:  template.HTML(Content)}, nil
 }
 
-func genUrl() string {
-	buf := make([]byte, urlLength)
-	for i := 0; i < urlLength; i++ {
+func GenerateID() string {
+	buf := make([]byte, idLength)
+	for i := 0; i < idLength; i++ {
 		buf[i] = chars[rand.Intn(len(chars))]
 	}
 	return string(buf)
@@ -147,7 +146,7 @@ func showHandler(w http.ResponseWriter, r *http.Request, name string) {
 
 //r.URL.Host
 func pasteitHandler(w http.ResponseWriter, r *http.Request) {
-	name := genUrl()
+	name := GenerateID()
 	pasteLanguage := "text"
 	if _, exist := languages[r.FormValue("lang")]; exist {
 		pasteLanguage = r.FormValue("lang")
