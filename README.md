@@ -1,5 +1,7 @@
 # Gopaste
 
+[![Build Status](https://travis-ci.org/jeremy-clerc/gopaste.svg?branch=master)](https://travis-ci.org/jeremy-clerc/gopaste)
+
 Some sort of pastebin like, very very simple, does not require any database, 
 pastes are written to the filesystem, syntax highliting is done with 
 [SyntaxHighlighter 3](http://alexgorbatchev.com/SyntaxHighlighter/).
