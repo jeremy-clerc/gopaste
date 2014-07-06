@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Paste it!</title>
+    <script type="text/javascript" src="/scripts/shCore.js"></script>
+    <script type="text/javascript" src="/scripts/{{.Brush}}"></script>
+    <link type="text/css" rel="stylesheet" href="/styles/shCoreDefault.css"/>
+    <link type="text/css" rel="stylesheet" href="/styles/shThemeRDark.css"/>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+    <style type="text/css">
+    <!--
+        body {
+          background-color: #1B2426;
+        }
+        #showurl {
+            font-size: 1.2em;
+            background-color: #202C2E;
+            height: 2em;
+            line-height: 2em;
+            text-align: center;
+            width: 100%
+            margin-bottom: 20px;
+        }
+        a {
+            color: #F0F0F0;
+            text-decoration: none;
+        }
+    -->
+    </style>
+ </head>
+  <body>
+    <div style="text-align: center; height: 100%; width: 100%;">	
+        <div id="showurl"><a href="http://{{.Host}}/{{.P.Name}}">{{.P.Name}}</a></div>        
+		<div>
+            <pre class="brush: {{.P.Language}};">{{.P.Content}}</pre>
+        </div>
+    </div>
+  </body>
+</html>
