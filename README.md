@@ -26,7 +26,6 @@ cron to clean the pastes.
 ## Todo
 * Add more test
 * Add screenshot
-* Add expiration
 * Add input limit (2MB for example)
 * Add password protection
 * Create configuration file or cmd line arguments
