@@ -1,2 +1,4 @@
-data/*
-!data/.placeholder
+/data/*
+!/data/.placeholder
+/gopaste
+*.swp
