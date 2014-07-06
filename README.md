@@ -17,11 +17,17 @@ cd gopaste
 go run
 ```
 
+
 By default it listen on port 8080
 
 This version works, there is no input size limits, submit rate limit, so be
-careful where you use it. There is no expiration rules, you can create your own
-cron to clean the pastes.
+careful where you use it.
+
+## Clean expired pastes
+
+Use maintenance/remove_expired.pl in cron job
+
+Default expiration is 1hour, max expiration is 1 week
 
 ## Todo
 * Add more test
