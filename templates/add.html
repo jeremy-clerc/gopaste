@@ -61,11 +61,21 @@
 			width: 80%;
 			margin: auto;
 		}
+		#error_msg {
+		    background-color: #F83939;
+		    color: #FFFFFF;
+		    font-size: 1.5em;
+		    height: 2em;
+		    line-height: 2em;
+		}
     -->
     </style>
  </head>
   <body>
     <div style="text-align: center; ">
+		{{ if .ErrorMsg }}
+		<div class="center" id="error_msg">{{ .ErrorMsg }}</div>
+		{{ end }}
         <form action="/" method="POST">
          	<div class="center" style="text-align: left;">
 				<label for="expire">For how long do we keep it: </label>

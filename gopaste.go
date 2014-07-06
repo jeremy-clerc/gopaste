@@ -17,6 +17,8 @@ import (
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz"
 const idLength = 6
 const dataDir = "data"
+const pasteMaxSize = 1048576
+const pasteMaxSizeDesc = "1MB"
 
 var validPath = regexp.MustCompile(
 	fmt.Sprintf("^/([a-zA-Z0-9]{%d})$", idLength))
@@ -157,7 +159,8 @@ func pasteitHandler(w http.ResponseWriter, r *http.Request) {
 
 	pasteExpiration := time.Now().Unix()
 
-	if formExpiration, err := strconv.ParseInt(r.FormValue("expire"), 10, 64); err != nil && formExpiration > 3600 && formExpiration < 604800 {
+	if formExpiration, err := strconv.ParseInt(r.FormValue("expire"), 10, 64); err != nil &&
+		formExpiration > 3600 && formExpiration < 604800 {
 		pasteExpiration = pasteExpiration + formExpiration
 	} else {
 		pasteExpiration = pasteExpiration + 3600
@@ -177,25 +180,37 @@ func pasteitHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "share", struct{ Host, Name string }{r.Host, p.Name})
 }
 
+func frontHandler(w http.ResponseWriter, r *http.Request) {
+	m := validPath.FindStringSubmatch(r.URL.Path)
+	if m != nil {
+		showHandler(w, r, m[1])
+	} else if len(r.URL.Path) > 1 {
+		http.Redirect(w, r, "/", http.StatusFound)
+	} else {
+		pasteLen := len(r.FormValue("paste"))
+		errorMsg := ""
+		if pasteLen > 0 && pasteLen <= pasteMaxSize {
+			pasteitHandler(w, r)
+			return
+		} else if pasteLen > pasteMaxSize {
+			errorMsg = "Paste refused, too big. Size limit is " +
+				pasteMaxSizeDesc
+		}
+		renderTemplate(w, "add", struct {
+			Langs    map[string]map[string]string
+			ErrorMsg string
+		}{
+			languages,
+			errorMsg})
+	}
+}
+
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	http.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 	http.Handle("/styles/", http.StripPrefix("/styles/", http.FileServer(http.Dir("styles"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		m := validPath.FindStringSubmatch(r.URL.Path)
-		if m != nil {
-			showHandler(w, r, m[1])
-		} else if len(r.URL.Path) > 1 {
-			http.Redirect(w, r, "/", http.StatusFound)
-		} else {
-			if len(r.FormValue("paste")) > 0 {
-				pasteitHandler(w, r)
-			} else {
-				renderTemplate(w, "add", struct{ Langs map[string]map[string]string }{languages})
-			}
-		}
-	})
+	http.HandleFunc("/", frontHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
