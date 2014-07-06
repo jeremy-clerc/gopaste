@@ -5,10 +5,11 @@ import (
 	"math/rand"
 	"regexp"
 	"testing"
+	"time"
 )
 
 func TestGenerateID(t *testing.T) {
-	rand.Seed(0)
+	rand.Seed(time.Now().UTC().UnixNano())
 	validID := regexp.MustCompile(
 		fmt.Sprintf("^([a-zA-Z0-9]{%d})$", idLength))
 
