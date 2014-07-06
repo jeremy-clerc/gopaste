@@ -24,9 +24,11 @@ careful where you use it. There is no expiration rules, you can create your own
 cron to clean the pastes.
 
 ## Todo
+* Add more test
 * Add screenshot
 * Add expiration
 * Add input limit (2MB for example)
 * Add password protection
 * Create configuration file or cmd line arguments
 * Create perl syntax highlighter for http://prismjs.com/ and migrate to prismjs
+
