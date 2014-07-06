@@ -13,16 +13,20 @@
             border: 2px solid #202C2E;
             color: #F0F0F0;
             padding: 10px;
-            width: 80%;
+            width: 100%;
         }
         #paste:focus {
             border: 2px solid #BBBBBB;
         }
+		label {
+			color: #F0F0F0;
+            font-size: 1.1em;
+		}
         #pasteit {
             background-color: #202C2E;
             border: medium none;
             color: #F0F0F0;
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: bold;
             margin-bottom: 10px;
             padding: 5px;
@@ -36,7 +40,7 @@
 			background: transparent;
 			width: 154px;
 			padding: 5px;
-			font-size: 1.2em;
+			font-size: 1.1em;
 			line-height: 1;
 			border: 0;
 			border-radius: 0;
@@ -46,12 +50,16 @@
 		    text-indent: 0.01px;
 		    text-overflow: '';
 		}
-		#lang {
+		.select {
 			width: 154px;
 			height: 2em;
 			overflow: hidden;
 			background: url(/images/icon-arrow-down-b.png) no-repeat right #f4f4f4;
 			border: 1px solid #ccc;
+		}
+		.center {
+			width: 80%;
+			margin: auto;
 		}
     -->
     </style>
@@ -59,15 +67,23 @@
   <body>
     <div style="text-align: center; ">
         <form action="/" method="POST">
-         	<div>
-        		<select id="lang" name="lang">
+         	<div class="center" style="text-align: left;">
+				<label for="expire">For how long do we keep it: </label>
+		   		<select class="select" id="expire" name="expire">
+					<option value="3600">1 hour</option>				
+					<option value="43200">12 hours</option>				
+					<option value="86400">1 day</option>				
+					<option value="604800">1 week</option>				
+				</select>
+				<label for="lang">Which language: </label> 
+        		<select class="select" id="lang" name="lang">
 					{{range $index, $element := .Langs }}
 					<option value="{{$index}}">{{$element.name}}</option>
 					{{end}}
 				</select>
 				<button id="pasteit" name="pasteit">Paste it!</button>
         	</div>
-        	<div>                     
+        	<div class="center">                     
         		<textarea id="paste" name="paste" rows="30" autofocus></textarea>
         	</div>
         </form>

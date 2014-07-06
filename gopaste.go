@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -20,7 +21,7 @@ const dataDir = "data"
 var validPath = regexp.MustCompile(
 	fmt.Sprintf("^/([a-zA-Z0-9]{%d})$", idLength))
 var filenameReg = regexp.MustCompile(
-	fmt.Sprintf("^%s/([a-zA-Z0-9]{%d})-([a-z0-9]+)$",
+	fmt.Sprintf("^%s/([a-zA-Z0-9]{%d})-([a-z0-9]+)-([0-9]+)$",
 		dataDir,
 		idLength))
 
@@ -84,13 +85,15 @@ var templates = template.Must(template.ParseFiles("templates/add.html",
 	"templates/view.html"))
 
 type Paste struct {
-	Name     string
-	Language string
-	Content  template.HTML
+	Name       string
+	Language   string
+	Expiration int64
+	Content    template.HTML
 }
 
 func (p *Paste) save() error {
-	filename := dataDir + "/" + p.Name + "-" + p.Language
+	filename := fmt.Sprintf("%s/%s-%s-%d",
+		dataDir, p.Name, p.Language, p.Expiration)
 	return ioutil.WriteFile(filename, []byte(p.Content), 0600)
 }
 
@@ -151,10 +154,20 @@ func pasteitHandler(w http.ResponseWriter, r *http.Request) {
 	if _, exist := languages[r.FormValue("lang")]; exist {
 		pasteLanguage = r.FormValue("lang")
 	}
+
+	pasteExpiration := time.Now().Unix()
+
+	if formExpiration, err := strconv.ParseInt(r.FormValue("expire"), 10, 64); err != nil && formExpiration > 3600 && formExpiration < 604800 {
+		pasteExpiration = pasteExpiration + formExpiration
+	} else {
+		pasteExpiration = pasteExpiration + 3600
+	}
+
 	p := &Paste{
-		Name:     name,
-		Language: pasteLanguage,
-		Content:  template.HTML(html.EscapeString(r.FormValue("paste"))),
+		Name:       name,
+		Language:   pasteLanguage,
+		Expiration: pasteExpiration,
+		Content:    template.HTML(html.EscapeString(r.FormValue("paste"))),
 	}
 	err := p.save()
 	if err != nil {
