@@ -6,8 +6,14 @@ Some sort of pastebin like, very very simple, does not require any database,
 pastes are written to the filesystem, syntax highliting is done with 
 [SyntaxHighlighter 3](http://alexgorbatchev.com/SyntaxHighlighter/).
 
+![Paste it!](http://i.imgur.com/5jlZnlV.png "Paste it!")
+![Share it!](http://i.imgur.com/CgUtLcg.png "Share it!")
+![View it!](http://i.imgur.com/BbbFGk4.png "View it!")
+
 ## Features
 * Only Syntax Highliting for now
+* Choose expiration time between 1hour to 1week
+* Url is dynamic, it uses the one you are accessing
 
 ## Run
 
